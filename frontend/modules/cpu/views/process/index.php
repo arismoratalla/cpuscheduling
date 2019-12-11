@@ -15,7 +15,7 @@ use yii\widgets\Pjax;
 use common\models\procurement\Processresult;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\procurement\ProcessSearch */
+/* @var $searchModel common\models\cpu\ProcessSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Processes';
@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'asPopover' => true,
                             'value' => $model->arrival_time,
                             'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-                            'formOptions'=>['action' => ['/procurement/process/updatearrivaltime']], // point to the new action
+                            'formOptions'=>['action' => ['/cpu/process/updatearrivaltime']], // point to the new action
                         ];
                     },
                     'hAlign'=>'center',
@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'asPopover' => true,
                             'value' => $model->burst_time,
                             'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-                            'formOptions'=>['action' => ['/procurement/process/updatebursttime']], // point to the new action
+                            'formOptions'=>['action' => ['/cpu/process/updatebursttime']], // point to the new action
                         ];
                     },
                     'hAlign'=>'center',
@@ -127,7 +127,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'asPopover' => true,
                             'value' => $model->priority,
                             'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-                            'formOptions'=>['action' => ['/procurement/process/updatepriority']], // point to the new action
+                            'formOptions'=>['action' => ['/cpu/process/updatepriority']], // point to the new action
                         ];
                     },
                     'hAlign'=>'center',
@@ -364,7 +364,7 @@ $( document ).ready(function() {
 function onFcfs(numberOfProcess, sessionId){
     jQuery.ajax( {
         type: 'POST',
-        url: '/procurement/process/fcfs?numberOfProcess='+numberOfProcess+'&sessionId='+sessionId,
+        url: '/cpu/process/fcfs?numberOfProcess='+numberOfProcess+'&sessionId='+sessionId,
         data: {csrfmiddlewaretoken: window.CSRF_TOKEN},
         dataType: 'html',
         success: function ( response ) {
@@ -381,12 +381,12 @@ function onRr(numberOfProcess, sessionId, timeQuantum){
     if(timeQuantum){
         jQuery.ajax( {
             type: 'POST',
-            url: '/procurement/process/rr?numberOfProcess='+numberOfProcess+'&sessionId='+sessionId+'&timeQuantum='+timeQuantum,
+            url: '/cpu/process/rr?numberOfProcess='+numberOfProcess+'&sessionId='+sessionId+'&timeQuantum='+timeQuantum,
             data: {csrfmiddlewaretoken: window.CSRF_TOKEN},
             dataType: 'html',
             success: function ( response ) {
                 $.pjax.reload({container:'#p1'});
-                $("#p1").width(400);
+                //$("#p1").width(400);
                 //makeFcfsGantt();
                 alert(response);
             },
@@ -412,7 +412,7 @@ function makeFcfsGantt()
         $("#number-of-process").change(function(){
         var e = document.getElementById("number-of-process");
             var strSel =  e.options[e.selectedIndex].value;
-            window.location.href="'.Yii::$app->urlManager->createUrl('procurement/process/index?sessionId='.$sessionId.'&numberOfProcess=').'" + strSel;
+            window.location.href="'.Yii::$app->urlManager->createUrl('cpu/process/index?sessionId='.$sessionId.'&numberOfProcess=').'" + strSel;
         });
 
     });');
