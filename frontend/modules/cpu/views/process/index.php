@@ -368,8 +368,11 @@ function onFcfs(numberOfProcess, sessionId){
         data: {csrfmiddlewaretoken: window.CSRF_TOKEN},
         dataType: 'html',
         success: function ( response ) {
+            alert(response);
+            
             $.pjax.reload({container:'#p0'});
             //makeFcfsGantt();
+             
         },
         error: function ( xhr, ajaxOptions, thrownError ) {
             alert( thrownError );
@@ -385,10 +388,12 @@ function onRr(numberOfProcess, sessionId, timeQuantum){
             data: {csrfmiddlewaretoken: window.CSRF_TOKEN},
             dataType: 'html',
             success: function ( response ) {
+                alert(response);
+                
                 $.pjax.reload({container:'#p1'});
                 //$("#p1").width(400);
                 //makeFcfsGantt();
-                alert(response);
+                
             },
             error: function ( xhr, ajaxOptions, thrownError ) {
                 alert( thrownError );

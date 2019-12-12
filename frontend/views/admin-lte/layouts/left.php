@@ -67,7 +67,7 @@ if(Yii::$app->user->isGuest){
                         'label' => 'System tools',
                         'icon' => 'cogs',
                         'url' => '/#',
-                        'visible'=> Yii::$app->user->can('access-system-tools'),
+                        'visible'=> Yii::$app->user->can('access-system-tools-'),
                         'items' => [
                             ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],'visible'=> Yii::$app->user->can('access-gii')],
                             ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],'visible'=> Yii::$app->user->can('access-debug')],
