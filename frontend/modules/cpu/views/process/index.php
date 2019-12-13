@@ -23,7 +23,66 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-
+<style>
+    #gantt-fcfs {
+      width: 90%;
+      margin: auto;
+    }
+    
+    #gantt-fcfs div{
+      display: flex;
+      overflow: auto;
+      float: left;
+      text-align: center;
+      margin: 0;
+      padding-top: 30px;
+      padding-bottom: 30px;
+      /*width: 200px;*/
+      border: 1px solid #000000;
+    }
+    
+    #gantt-fcfs div p{
+      display: none;
+      /*position: relative;*/
+      /*color: #FFFFFF;*/
+    }
+    
+    #gantt-fcfs div span{
+      /*float: right;*/
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    
+    #gantt-rr {
+      width: 90%;
+      margin: auto;
+    }
+    
+    #gantt-rr div{
+      display: block;
+      float: left;
+      text-align: center;
+      margin: 0;
+      padding-top: 30px;
+      padding-bottom: 30px;
+      /*width: 200px;*/
+      border: 1px solid #000000;
+    }
+    
+    #gantt-rr div p{
+      display: none;
+      position: relative;
+      /*color: #FFFFFF;*/
+    }
+    
+    #gantt-rr div span{
+      /*float: right;*/
+      position: relative;
+      padding-left: 30px;
+    }
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 <div class="process-index">
 
     <h1><?= Html::encode('CPU Process Simulation') ?></h1>
@@ -140,9 +199,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class="panel panel-info">
         <div class="panel-heading"><b>First-come,First-serve (FCFS)</b></div>
-        <div class="panel-body" id="gantt-fcfs">
-        <h4>Gannt Chart</h4>
-        </div>
+        <div class="panel-body" id="gantt-fcfs"></div>
         <div class="panel-body" id="result-fcfs">
             <?php \yii\widgets\Pjax::begin(); ?>
             <?php
@@ -241,9 +298,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
     <div class="panel panel-info">
         <div class="panel-heading"><b>Round Robin (RR)</b></div>
-        <div class="panel-body" id="gantt-rr">
-        <h4>Gannt Chart</h4>
-        </div>
+        <div class="panel-body" id="gantt-rr"></div>
         <div class="panel-body" id="result-rr">
             <?php \yii\widgets\Pjax::begin(); ?>
             <?php
@@ -368,17 +423,47 @@ function onFcfs(numberOfProcess, sessionId){
         data: {csrfmiddlewaretoken: window.CSRF_TOKEN},
         dataType: 'html',
         success: function ( response ) {
-            alert(response);
-            
+            var obj = JSON.parse(response);
             $.pjax.reload({container:'#p0'});
-            //makeFcfsGantt();
-             
+            $('#gantt-fcfs').html(drawFcfsGantt(obj));
+            
+            animateGantt(obj);
         },
         error: function ( xhr, ajaxOptions, thrownError ) {
             alert( thrownError );
         }
     });
 } 
+    
+function drawFcfsGantt(obj)
+{
+    var tab = '';
+    var i;
+    var w;
+    for (i = 0; i < obj.length; i++) {
+      w = obj[i].bt * 20;
+      //tab += '<div style="width: ' + w +'px;"><p id="' + obj[i].process +'">' + obj[i].process + '</p><span">' + obj[i].bt + '</span></div>';
+      tab += '<div style="width: ' + w +'px;"><div id="' + obj[i].process +'">' + obj[i].process + '</div><div">' + obj[i].bt + '</div></div>';
+    }
+    return tab;
+}
+    
+
+    
+function animateGantt(obj){
+    var i;
+    var w;
+    var d = 5000;
+    for (i = 0; i < obj.length; i++) {
+        //d = d + (obj[i].bt * 5000);
+        $('#'+obj[i].process+'').delay(d).fadeIn();
+        //$('#'+obj[i].process+'').css('color', 'black');
+        d += 3000;
+        /*$( '#'+obj[i].process ).animate({
+          color: "#000000"
+        }, 100 );*/
+    }
+}
 
 function onRr(numberOfProcess, sessionId, timeQuantum){
     if(timeQuantum){
@@ -388,12 +473,10 @@ function onRr(numberOfProcess, sessionId, timeQuantum){
             data: {csrfmiddlewaretoken: window.CSRF_TOKEN},
             dataType: 'html',
             success: function ( response ) {
-                alert(response);
-                
+                var obj = JSON.parse(response);
                 $.pjax.reload({container:'#p1'});
-                //$("#p1").width(400);
-                //makeFcfsGantt();
-                
+                $('#gantt-rr').html(drawRrGantt(obj));
+                animateRrGantt(obj);
             },
             error: function ( xhr, ajaxOptions, thrownError ) {
                 alert( thrownError );
@@ -404,10 +487,30 @@ function onRr(numberOfProcess, sessionId, timeQuantum){
     }
     
 } 
-function makeFcfsGantt()
+    
+function drawRrGantt(obj)
 {
-    $('#gantt-fcfs').append('<div id="P1" style="border: 1px solid #000000; width: 200px; float: left;">P1</div>')		
-    e.preventDefault();
+    var tab = '';
+    var i;
+    var w;
+    for (i = 0; i < obj.length; i++) {
+      w = obj[i].bt * 10;
+      tab += '<div style="width: ' + w +'px;"><p id="' + obj[i].process + obj[i].rm +'">' + obj[i].process + '</p><span">' + obj[i].bt + '</span></div>';
+    }
+    return tab;
+}
+    
+function animateRrGantt(obj){
+    var i;
+    var w;
+    var d = 5000;
+    for (i = 0; i < obj.length; i++) {
+        //d = d + (obj[i].bt * 5000);
+        $('#'+obj[i].process+ obj[i].rm +'').delay(d).fadeIn();
+
+        d += 3000;
+
+    }
 }
 </script>
 

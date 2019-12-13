@@ -313,7 +313,7 @@ class ProcessController extends Controller
             
             $out = $row;
             $out['process_result_id'] = '';
-            $out['process_id'] = $p['process_id'];
+            $out['process_id'] = $p['name'];
             $out['session_id'] = $p['session_id'];
             $out['arrival_time'] = $p['arrival_time'];
             $out['begin'] = $waiting_time;
@@ -323,7 +323,7 @@ class ProcessController extends Controller
             $out['cpu'] = $p['burst_time'];
             
             $waiting_time += $p['burst_time'];
-            $g = ['p'=>$out['process_id'],'t'=>$p['burst_time']];
+            $g = ['process'=>$out['process_id'],'bt'=>$p['burst_time']];
             
             array_push($result, $out);
             array_push($gantt, $g);
@@ -342,7 +342,7 @@ class ProcessController extends Controller
             'pagination' => false
         ]);*/
         
-        //return $resultDataProvider;
+        
         return $gantt;
         
         
@@ -388,7 +388,7 @@ class ProcessController extends Controller
             $row = [
                 'process_result_id' => '', 
                 'process_result_type' => 2, 
-                'process_id' => $p['process_id'],
+                'process_id' => $p['name'],
                 'session_id' => $p['session_id'],
                 'arrival_time' =>  $p['arrival_time'],
                 'begin' => 0,
@@ -431,7 +431,7 @@ class ProcessController extends Controller
                     } 
                     //$out[$i]['end'] = ($result[$i]['remaining_burst_time'] == 0) ? $t : $out[$i]['end'];
                     
-                    $g = ['p'=>$out[$i]['process_id'],'t'=>$t, 'rm'=>$result[$i]['remaining_burst_time']];
+                    $g = ['process'=>$out[$i]['process_id'],'bt'=>$t, 'rm'=>$result[$i]['remaining_burst_time']];
                     array_push($gantt, $g);
                 }
             }
